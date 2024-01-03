@@ -1,0 +1,8 @@
+module BabyJubjub {
+    header "babyjubjub.h"
+    export *
+}
+module LibPolygonID {
+    header "libpolygonid.h"
+    export *
+}
