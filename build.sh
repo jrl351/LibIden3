@@ -26,7 +26,7 @@ mergeLibraries() {
   rm -Rf "$XCF_TMP"
 }
 
-echo "Cleaning..."
+# echo "Cleaning..."
 
 mkdir -p libs
 rm -f libs/*.a
@@ -36,38 +36,28 @@ rm -f *.zip
 echo "Building libbabyjubjub..."
 
 cd "$BJJ_DIR"
-cargo build --release --lib --target aarch64-apple-darwin
-cargo build --release --lib --target x86_64-apple-darwin
-cargo build --release --lib --target aarch64-apple-ios-sim
-cargo build --release --lib --target aarch64-apple-ios 
-cargo build --release --lib --target x86_64-apple-ios
 
-lipo -create \
-    target/aarch64-apple-ios-sim/release/libbabyjubjub.a \
-    target/x86_64-apple-ios/release/libbabyjubjub.a \
-    -output $XCF_LIBS/libbabyjubjub-ios-sim.a \
-
-lipo -create \
-  target/x86_64-apple-darwin/release/libbabyjubjub.a \
-  target/aarch64-apple-darwin/release/libbabyjubjub.a \
-  -output $XCF_LIBS/libbabyjubjub-macos.a
-
-cp target/aarch64-apple-ios/release/libbabyjubjub.a $XCF_LIBS/libbabyjubjub-ios.a
-
+make ios
 make bindings
+
 cp target/bindings.h $XCF_INCLUDE/babyjubjub.h
+
+cp libs/libbabyjubjub-ios.a $XCF_LIBS/libbabyjubjub-ios.a
+cp libs/libbabyjubjub-ios-sim.a $XCF_LIBS/libbabyjubjub-ios-sim.a
+cp libs/libbabyjubjub-macos.a $XCF_LIBS/libbabyjubjub-macos.a
 
 echo "Building c-polygon..."
 
 cd "$CPOLY_DIR"
 
+make ios-simulator
 make ios
 make darwin
 
 cp ios/libpolygonid.h "$XCF_INCLUDE"
 cp ios/libpolygonid-darwin.a $XCF_LIBS/cpolygonid-macos.a
 cp ios/libpolygonid-ios.a $XCF_LIBS/cpolygonid-ios.a
-cp ios/libpolygonid-ios-simulator.a $XCF_LIBS/cpolygonid-ios-sim.a
+cp ios/libpolygonid-ios-sim.a $XCF_LIBS/cpolygonid-ios-sim.a 
 
 echo "Merging libraries..."
 
@@ -81,23 +71,23 @@ libtool -static -no_warning_for_no_symbols \
 libtool -static -no_warning_for_no_symbols \
   -o libs/libpolygonid-ios.a \
   libs/libbabyjubjub-ios.a \
-  libs/cpolygonid-ios.a \
-
+  libs/cpolygonid-ios.a
+  
 libtool -static -no_warning_for_no_symbols \
   -o libs/libpolygonid-ios-sim.a \
   libs/libbabyjubjub-ios-sim.a \
-  libs/cpolygonid-ios-sim.a \
-
+  libs/cpolygonid-ios-sim.a
+  
 echo "Building xcframework..."
 
-xcodebuild -create-xcframework \
+xcodebuild -verbose -create-xcframework \
+     -output LibPolygonID.xcframework \
     -library libs/libpolygonid-macos.a \
-    -headers ./include/ \
-    -library libs/libpolygonid-ios.a \
     -headers ./include/ \
     -library libs/libpolygonid-ios-sim.a \
     -headers ./include/ \
-     -output LibPolygonID.xcframework
+    -library libs/libpolygonid-ios.a \
+    -headers ./include/
 
 #echo "Zipping..."
 #zip -r libpolygonid.zip LibPolygonID.xcframework
