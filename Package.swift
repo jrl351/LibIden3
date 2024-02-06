@@ -16,6 +16,7 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .binaryTarget(
             name: "LibPolygonID",
-            path: "LibPolygonID.xcframework"),
+            url: "https://github.com/jrl351/LibPolygonID/releases/download/v0.0.1/libpolygonid.zip",
+            checksum: "a4e76d7711fc8332b0619cfa3f2880afb1d6ebe6dd2a8fabb10a5fe7e5fe88a1"),
        ]
 )
