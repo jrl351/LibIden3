@@ -52,12 +52,13 @@ cd "$CPOLY_DIR"
 
 make ios-simulator
 make ios
-make darwin
+# TODO: Should we support darwin-amd64?
+make darwin-arm64
 
 cp ios/libpolygonid.h "$XCF_INCLUDE"
-cp ios/libpolygonid-darwin.a $XCF_LIBS/cpolygonid-macos.a
+cp ios/libpolygonid-darwin-arm64.a $XCF_LIBS/cpolygonid-macos.a
 cp ios/libpolygonid-ios.a $XCF_LIBS/cpolygonid-ios.a
-cp ios/libpolygonid-ios-sim.a $XCF_LIBS/cpolygonid-ios-sim.a 
+cp ios/libpolygonid-ios-simulator.a $XCF_LIBS/cpolygonid-ios-sim.a 
 
 echo "Merging libraries..."
 
