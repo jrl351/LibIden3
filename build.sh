@@ -37,6 +37,8 @@ echo "Building libbabyjubjub..."
 
 cd "$BJJ_DIR"
 
+git pull
+
 make ios
 make bindings
 
@@ -49,6 +51,8 @@ cp libs/libbabyjubjub-macos.a $XCF_LIBS/libbabyjubjub-macos.a
 echo "Building c-polygon..."
 
 cd "$CPOLY_DIR"
+
+git pull
 
 make ios-simulator
 make ios
