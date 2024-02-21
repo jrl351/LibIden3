@@ -1,3 +1,4 @@
 libs/
-include/*.h
+include/babyjubjub.h
+include/libpolygon.h
 libpolygonid.zip

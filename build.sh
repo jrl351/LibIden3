@@ -68,20 +68,23 @@ echo "Merging libraries..."
 
 cd "$XCF_DIR"
 
+rm libs/libpolygonid-macos.a
+
 libtool -static -no_warning_for_no_symbols \
   -o libs/libpolygonid-macos.a \
-  libs/libbabyjubjub-macos.a \
-  libs/cpolygonid-macos.a
+  libs/*-macos.a
 
 libtool -static -no_warning_for_no_symbols \
   -o libs/libpolygonid-ios.a \
   libs/libbabyjubjub-ios.a \
-  libs/cpolygonid-ios.a
+  libs/cpolygonid-ios.a \
+  libs/librapidsnark-ios.a
   
 libtool -static -no_warning_for_no_symbols \
   -o libs/libpolygonid-ios-sim.a \
   libs/libbabyjubjub-ios-sim.a \
-  libs/cpolygonid-ios-sim.a
+  libs/cpolygonid-ios-sim.a \
+  libs/librapidsnark-ios-sim.a
   
 echo "Building xcframework..."
 
