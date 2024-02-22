@@ -5,8 +5,8 @@ XCF_LIBS="$XCF_DIR/libs"
 XCF_TMP="$XCF_DIR/tmp"
 XCF_INCLUDE="$XCF_DIR/include"
 
-BJJ_DIR="$XCF_DIR/../libbabyjubjub"
-BJJ_TARGET="$BJJ_DIR/target"
+BJJ_DIR="$XCF_DIR/../BabyJubjub"
+BJJ_LIBS="$XCF_DIR/babyjubjub/libs"
 
 CPOLY_DIR="$XCF_DIR/../c-polygonid"
 
@@ -29,7 +29,7 @@ mergeLibraries() {
 # echo "Cleaning..."
 
 mkdir -p libs
-rm -f libs/*.a
+rm -f $XCF_LIBS/libpolygonid-*.a
 rm -rf *.xcframework
 rm -f *.zip
 
@@ -44,9 +44,9 @@ make bindings
 
 cp target/bindings.h $XCF_INCLUDE/babyjubjub.h
 
-cp libs/libbabyjubjub-ios.a $XCF_LIBS/libbabyjubjub-ios.a
-cp libs/libbabyjubjub-ios-sim.a $XCF_LIBS/libbabyjubjub-ios-sim.a
-cp libs/libbabyjubjub-macos.a $XCF_LIBS/libbabyjubjub-macos.a
+cp libs/libbabyjubjub-ios.a $BJJ_LIBS/libbabyjubjub-ios.a
+cp libs/libbabyjubjub-ios-sim.a $BJJ_LIBS/libbabyjubjub-ios-sim.a
+cp libs/libbabyjubjub-macos.a $BJJ_LIBS/libbabyjubjub-macos.a
 
 echo "Building c-polygon..."
 
@@ -62,13 +62,11 @@ make darwin-arm64
 cp ios/libpolygonid.h "$XCF_INCLUDE"
 cp ios/libpolygonid-darwin-arm64.a $XCF_LIBS/cpolygonid-macos.a
 cp ios/libpolygonid-ios.a $XCF_LIBS/cpolygonid-ios.a
-cp ios/libpolygonid-ios-simulator.a $XCF_LIBS/cpolygonid-ios-sim.a 
+cp ios/libpolygonid-ios-simulator.a $XCF_LIBS/cpolygonid-ios-sim.a
 
 echo "Merging libraries..."
 
 cd "$XCF_DIR"
-
-rm libs/libpolygonid-macos.a
 
 libtool -static -no_warning_for_no_symbols \
   -o libs/libpolygonid-macos.a \
@@ -76,17 +74,19 @@ libtool -static -no_warning_for_no_symbols \
 
 libtool -static -no_warning_for_no_symbols \
   -o libs/libpolygonid-ios.a \
-  libs/libbabyjubjub-ios.a \
-  libs/cpolygonid-ios.a \
-  libs/librapidsnark-ios.a
-  
+  libs/*-ios.a
+
 libtool -static -no_warning_for_no_symbols \
   -o libs/libpolygonid-ios-sim.a \
-  libs/libbabyjubjub-ios-sim.a \
-  libs/cpolygonid-ios-sim.a \
-  libs/librapidsnark-ios-sim.a
+  libs/*-ios-sim.a
   
-echo "Building xcframework..."
+echo "Building xcframeworks..."
+
+xcodebuild -verbose -create-xcframework \
+     -output BabyJubjub.xcframework \
+    -library $BJJ_LIBS/libbabyjubjub-macos.a \
+    -library $BJJ_LIBS/libbabyjubjub-ios-sim.a \
+    -library $BJJ_LIBS/libbabyjubjub-ios.a
 
 xcodebuild -verbose -create-xcframework \
      -output LibPolygonID.xcframework \
