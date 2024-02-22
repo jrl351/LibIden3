@@ -11,7 +11,6 @@ module Rapidsnark {
     export *
 }
 module WitnessCalc {
-
     header "witnesscalc_authV2.h"
     header "witnesscalc_credentialAtomicQueryMTPV2.h"
     header "witnesscalc_credentialAtomicQueryMTPV2OnChain.h"
