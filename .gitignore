@@ -1,4 +1,8 @@
+.idea/
 libs/
-include/babyjubjub.h
-include/libpolygon.h
-libpolygonid.zip
+include/
+!include/prover.h
+!include/modulemap.module
+babyjubjub/
+witnesscalc/
+rapidsnark/
