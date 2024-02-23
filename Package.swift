@@ -9,11 +9,20 @@ let package = Package(
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "LibPolygonID",
-            targets: ["LibPolygonID"]),
+            targets: ["LibPolygonID", "BabyJubjub", "Rapidsnark", "WitnessCalc"]),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
+        .binaryTarget(
+            name: "BabyJubjub",
+            path: "BabyJubjub.xcframework"),
+        .binaryTarget(
+            name: "WitnessCalc",
+            path: "WitnessCalc.xcframework"),
+        .binaryTarget(
+            name: "Rapidsnark",
+            path: "Rapidsnark.xcframework"),
         .binaryTarget(
             name: "LibPolygonID",
             path: "LibPolygonID.xcframework"),
