@@ -35,10 +35,35 @@ mergeLibraries() {
 
 mkdir -p libs
 rm -f $BJJ_LIBS/*.a
+rm -f $WITNESS_LIBS/*.a
 rm -f $RS_LIBS/*.a
 rm -f $XCF_LIBS/*.a
 rm -rf *.xcframework
 rm -f *.zip
+
+echo "Building libbabyjubjub..."
+
+cd "$BJJ_DIR"
+
+git pull
+
+make ios
+make bindings
+
+mkdir -p $XCF_INCLUDE
+cp target/bindings.h $XCF_INCLUDE/babyjubjub.h
+
+mkdir -p $BJJ_LIBS
+cp libs/libbabyjubjub-ios.a $BJJ_LIBS/libbabyjubjub-ios.a
+cp libs/libbabyjubjub-ios-sim.a $BJJ_LIBS/libbabyjubjub-ios-sim.a
+cp libs/libbabyjubjub-macos.a $BJJ_LIBS/libbabyjubjub-macos.a
+
+cd $XCF_DIR
+xcodebuild -verbose -create-xcframework \
+     -output BabyJubjub.xcframework \
+    -library $BJJ_LIBS/libbabyjubjub-macos.a \
+    -library $BJJ_LIBS/libbabyjubjub-ios-sim.a \
+    -library $BJJ_LIBS/libbabyjubjub-ios.a
 
 echo "Building witnesscalc..."
 
@@ -92,30 +117,6 @@ xcodebuild -verbose -create-xcframework \
     -output WitnessCalc.xcframework \
     -library $WITNESS_LIBS/witnesscalc-macos.a
 
-echo "Building libbabyjubjub..."
-
-cd "$BJJ_DIR"
-
-git pull
-
-make ios
-make bindings
-
-mkdir -p $XCF_INCLUDE
-cp target/bindings.h $XCF_INCLUDE/babyjubjub.h
-
-mkdir -p $BJJ_LIBS
-cp libs/libbabyjubjub-ios.a $BJJ_LIBS/libbabyjubjub-ios.a
-cp libs/libbabyjubjub-ios-sim.a $BJJ_LIBS/libbabyjubjub-ios-sim.a
-cp libs/libbabyjubjub-macos.a $BJJ_LIBS/libbabyjubjub-macos.a
-
-cd $XCF_DIR
-xcodebuild -verbose -create-xcframework \
-     -output BabyJubjub.xcframework \
-    -library $BJJ_LIBS/libbabyjubjub-macos.a \
-    -library $BJJ_LIBS/libbabyjubjub-ios-sim.a \
-    -library $BJJ_LIBS/libbabyjubjub-ios.a
-
 echo "Building rapidsnark..."
 
 RS_FILES=(librapidsnark libfr libfq libgmp)
@@ -161,29 +162,13 @@ make darwin-arm64
 cp ios/libpolygonid.h "$XCF_INCLUDE"
 
 mkdir -p $XCF_LIBS
-cp ios/libpolygonid-darwin-arm64.a $XCF_LIBS/cpolygonid-macos.a
-cp ios/libpolygonid-ios.a $XCF_LIBS/cpolygonid-ios.a
-cp ios/libpolygonid-ios-simulator.a $XCF_LIBS/cpolygonid-ios-sim.a
+cp ios/libpolygonid-darwin-arm64.a $XCF_LIBS/libpolygonid-macos.a
+cp ios/libpolygonid-ios.a $XCF_LIBS/libpolygonid-ios.a
+cp ios/libpolygonid-ios-simulator.a $XCF_LIBS/libpolygonid-ios-sim.a
 
-echo "Merging libraries..."
-
-cd "$XCF_DIR"
-
-libtool -static -no_warning_for_no_symbols \
-  -o libs/libpolygonid-macos.a \
-  libs/*-macos.a
-
-libtool -static -no_warning_for_no_symbols \
-  -o libs/libpolygonid-ios.a \
-  libs/*-ios.a
-
-libtool -static -no_warning_for_no_symbols \
-  -o libs/libpolygonid-ios-sim.a \
-  libs/*-ios-sim.a
-  
 echo "Building xcframeworks..."
 
-
+cd "$XCF_DIR"
 
 xcodebuild -verbose -create-xcframework \
      -output LibPolygonID.xcframework \
