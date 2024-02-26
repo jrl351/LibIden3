@@ -159,7 +159,9 @@ buildRapidsnark() {
   RS_FILES=(librapidsnark libfr libfq libgmp)
   RS_DIR="$XCF_DIR/../rapidsnark"
   RS_MACOS_DIR="$RS_DIR/package_macos_arm64"
+  RS_IOS_DIR="$RS_DIR/build_prover_ios"
   RS_IOS_SIM_DIR="$RS_DIR/build_prover_ios_simulator"
+  RS_IOS_OUTPUT_DIR="$RS_IOS_DIR/src/Release-iphoneos"
   RS_IOS_SIM_OUTPUT_DIR="$RS_IOS_SIM_DIR/src/Release-iphonesimulator"
 
   RS_LIBS="$XCF_DIR/rapidsnark/libs"
@@ -192,17 +194,39 @@ buildRapidsnark() {
   set +e
   ./build_gmp.sh ios_simulator
   set -e
-  mkdir -p $RS_IOS_SIM_DIR && cd $RS_IOS_SIM_DIR
+  mkdir -p $RS_IOS_SIM_DIR
+  cd $RS_IOS_SIM_DIR
   cmake .. -GXcode -DTARGET_PLATFORM=IOS -DCMAKE_INSTALL_PREFIX=../package_ios_simulator -DUSE_ASM=NO
-  xcodebuild -destination 'generic/platform=iOS Simulator' \
+  xcodebuild \
+    -destination 'generic/platform=iOS Simulator' \
     -scheme rapidsnarkStatic \
     -project rapidsnark.xcodeproj \
     -configuration Release
 
-  cp "$RS_DIR/build_prover_ios_simulator/src/Debug-iphonesimulator/libfq.a" "$RS_LIBS/libfq-ios-sim.a"
-  cp "$RS_DIR/build_prover_ios_simulator/src/Debug-iphonesimulator/libfr.a" "$RS_LIBS/libfr-ios-sim.a"
-  cp "$RS_DIR/build_prover_ios_simulator/src/Debug-iphonesimulator/librapidsnark.a" "$RS_LIBS/librapidsnark-ios-sim.a"
+  cp "$RS_IOS_SIM_OUTPUT_DIR/libfq.a" "$RS_LIBS/libfq-ios-sim.a"
+  cp "$RS_IOS_SIM_OUTPUT_DIR/libfr.a" "$RS_LIBS/libfr-ios-sim.a"
+  cp "$RS_IOS_SIM_OUTPUT_DIR/librapidsnark.a" "$RS_LIBS/librapidsnark-ios-sim.a"
   cp $RS_DIR/depends/gmp/package_iphone_simulator/lib/libgmp.a $RS_LIBS/libgmp-ios-sim.a
+
+  # iOS
+  cd $RS_DIR
+
+  set +e
+  ./build_gmp.sh ios_simulator
+  set -e
+  mkdir -p $RS_IOS_DIR
+  cd $RS_IOS_DIR
+  cmake .. -GXcode -DTARGET_PLATFORM=IOS -DCMAKE_INSTALL_PREFIX=../package_ios -DUSE_ASM=NO
+  xcodebuild \
+    -destination 'generic/platform=iOS' \
+    -scheme rapidsnarkStatic \
+    -project rapidsnark.xcodeproj \
+    -configuration Release
+
+  cp "$RS_IOS_OUTPUT_DIR/libfq.a" "$RS_LIBS/libfq-ios.a"
+  cp "$RS_IOS_OUTPUT_DIR/libfr.a" "$RS_LIBS/libfr-ios.a"
+  cp "$RS_IOS_OUTPUT_DIR/librapidsnark.a" "$RS_LIBS/librapidsnark-ios.a"
+  cp $RS_DIR/depends/gmp/package_ios_arm64/lib/libgmp.a $RS_LIBS/libgmp-ios.a
 
   echo "Merging rapidsnark libraries..."
   rm -f $RS_LIBS/rapidsnark-*
@@ -214,11 +238,17 @@ buildRapidsnark() {
     -o $RS_LIBS/rapidsnark-ios-sim.a \
     $RS_LIBS/*-ios-sim.a
 
+  libtool -static -no_warning_for_no_symbols \
+    -o $RS_LIBS/rapidsnark-ios.a \
+    $RS_LIBS/*-ios.a
+
   cd $XCF_DIR
   xcodebuild -verbose -create-xcframework \
     -output Rapidsnark.xcframework \
     -library $RS_LIBS/rapidsnark-macos.a \
-    -library $RS_LIBS/rapidsnark-ios-sim.a
+    -library $RS_LIBS/rapidsnark-ios-sim.a \
+    -library $RS_LIBS/rapidsnark-ios.a
+
 }
 
 buildCPolygonID() {
