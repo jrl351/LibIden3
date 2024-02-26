@@ -5,39 +5,6 @@ XCF_INCLUDE="$XCF_DIR/include"
 
 set -e
 
-buildBabyJubJub() {
-  echo "Building libbabyjubjub..."
-
-  BJJ_DIR="$XCF_DIR/../BabyJubjub"
-  BJJ_LIBS="$XCF_DIR/babyjubjub/libs"
-  BJJ_TARGET="BabyJubjub.xcframework"
-
-  cd $XCF_DIR
-
-  rm -f $BJJ_LIBS/*.a
-  rm -Rf $BJJ_TARGET
-
-  cd "$BJJ_DIR"
-  git pull
-
-  make ios
-  make bindings
-
-  cp target/bindings.h $XCF_INCLUDE/babyjubjub.h
-
-  mkdir -p $BJJ_LIBS
-  cp libs/libbabyjubjub-ios.a $BJJ_LIBS/libbabyjubjub-ios.a
-  cp libs/libbabyjubjub-ios-sim.a $BJJ_LIBS/libbabyjubjub-ios-sim.a
-  cp libs/libbabyjubjub-macos.a $BJJ_LIBS/libbabyjubjub-macos.a
-
-  cd $XCF_DIR
-  xcodebuild -verbose -create-xcframework \
-       -output BabyJubjub.xcframework \
-      -library $BJJ_LIBS/libbabyjubjub-macos.a \
-      -library $BJJ_LIBS/libbabyjubjub-ios-sim.a \
-      -library $BJJ_LIBS/libbabyjubjub-ios.a
-}
-
 buildWitness() {
  echo "Building witnesscalc..."
 
@@ -289,7 +256,6 @@ buildCPolygonID() {
     -headers ./include/
 }
 
-buildBabyJubJub
 buildWitness
 buildRapidsnark
 buildCPolygonID
