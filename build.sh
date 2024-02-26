@@ -53,7 +53,9 @@ buildWitness() {
 
  WITNESS_DIR="$XCF_DIR/../witnesscalc"
  WITNESS_PACKAGE_DIR="$WITNESS_DIR/package"
+ WITNESS_IOS_DIR="$WITNESS_DIR/build_witnesscalc_ios"
  WITNESS_IOS_SIM_DIR="$WITNESS_DIR/build_witnesscalc_ios_simulator"
+ WITNESS_IOS_OUTPUT_DIR="$WITNESS_IOS_DIR/src/Release-iphoneos"
  WITNESS_IOS_SIM_OUTPUT_DIR="$WITNESS_IOS_SIM_DIR/src/Release-iphonesimulator"
  WITNESS_LIBS="$XCF_DIR/witnesscalc/libs"
  WITNESS_TARGET="WitnessCalc.xcframework"
@@ -90,6 +92,7 @@ buildWitness() {
   ./build_gmp.sh ios_simulator
   set -e
   make ios-simulator
+  mkdir -p $WITNESS_IOS_SIM_DIR
   cd $WITNESS_IOS_SIM_DIR
   for file in "${WITNESS_FILES[@]}"; do
     xcodebuild -project witnesscalc.xcodeproj \
@@ -104,6 +107,27 @@ buildWitness() {
   cp "$WITNESS_IOS_SIM_OUTPUT_DIR/libfr.a" "$WITNESS_LIBS/libfr-ios-sim.a"
   cp "$WITNESS_DIR/depends/gmp/package_iphone_simulator/lib/libgmp.a" "$WITNESS_LIBS/libgmp-ios-sim.a"
 
+  # iOS
+  set +e
+  ./build_gmp.sh ios
+  set -e
+  make ios
+
+  mkdir -p $WITNESS_IOS_DIR
+  cd $WITNESS_IOS_DIR
+  for file in "${WITNESS_FILES[@]}"; do
+    xcodebuild -project witnesscalc.xcodeproj \
+      -destination 'generic/platform=iOS' \
+      -configuration Release \
+      -scheme ${file}Static
+    cp $WITNESS_IOS_OUTPUT_DIR/lib$file.a $WITNESS_LIBS/lib$file-ios.a
+  done
+
+  cd $WITNESS_DIR
+
+  cp "$WITNESS_IOS_OUTPUT_DIR/libfr.a" "$WITNESS_LIBS/libfr-ios.a"
+  cp "$WITNESS_DIR/depends/gmp/package_ios_arm64/lib/libgmp.a" "$WITNESS_LIBS/libgmp-ios.a"
+
   echo "Merging witnesscalc libraries..."
 
   rm -f $WITNESS_LIBS/witnesscalc-*
@@ -115,13 +139,18 @@ buildWitness() {
     -o $WITNESS_LIBS/witnesscalc-ios-sim.a \
     $WITNESS_LIBS/*-ios-sim.a
 
+  libtool -static -no_warning_for_no_symbols \
+    -o $WITNESS_LIBS/witnesscalc-ios.a \
+    $WITNESS_LIBS/*-ios.a
+
   echo "Building witnesscalc framework..."
 
   cd $XCF_DIR
   xcodebuild -verbose -create-xcframework \
     -output WitnessCalc.xcframework \
     -library $WITNESS_LIBS/witnesscalc-macos.a \
-    -library $WITNESS_LIBS/witnesscalc-ios-sim.a
+    -library $WITNESS_LIBS/witnesscalc-ios-sim.a \
+    -library $WITNESS_LIBS/witnesscalc-ios.a
 }
 
 buildRapidsnark() {
