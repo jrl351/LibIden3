@@ -14,17 +14,8 @@ let package = Package(
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
-        .binaryTarget(
-            name: "BabyJubjub",
-            path: "BabyJubjub.xcframework"),
-        .binaryTarget(
-            name: "WitnessCalc",
-            path: "WitnessCalc.xcframework"),
-        .binaryTarget(
-            name: "Rapidsnark",
-            path: "Rapidsnark.xcframework"),
-        .binaryTarget(
-            name: "LibPolygonID",
-            path: "LibPolygonID.xcframework"),
+        .binaryTarget(name: "LibPolygonID",
+                      url: "https://github.com/jrl351/LibPolygonID/releases/download/v0.0.4/libpolygonid.zip",
+                      checksum: "17ccb1c8ee24e62ee618565ed804d29d49ae02cb827a8651f8e07454416b0854"),
        ]
 )
