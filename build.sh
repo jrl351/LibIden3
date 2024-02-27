@@ -5,6 +5,20 @@ XCF_INCLUDE="$XCF_DIR/include"
 
 set -e
 
+buildBabyJubjub() {
+  echo "Building Baby Jubjub..."
+
+  BJJ_DIR="$XCF_DIR/../BabyJubjub"
+
+  cd $BJJ_DIR
+
+  make framework
+
+  cp $BJJ_DIR/include/babyjubjub.h $XCF_INCLUDE
+
+  mv BabyJubjub.xcframework $XCF_DIR
+}
+
 buildWitness() {
  echo "Building witnesscalc..."
 
@@ -256,6 +270,7 @@ buildCPolygonID() {
     -headers ./include/
 }
 
-buildWitness
-buildRapidsnark
+buildBabyJubjub
+#buildWitness
+#buildRapidsnark
 buildCPolygonID
