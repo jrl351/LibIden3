@@ -24,7 +24,7 @@ let package = Package(
                       url: "https://github.com/jrl351/LibPolygonID/releases/download/v0.0.5-witness/witnesscalc.zip",
                       checksum: "938efe7217930008d39b5ef88c08845f4f002a4443526b8c56297f237aeae588"),
         .binaryTarget(name: "Rapidsnark",
-                      url: "https://github.com/jrl351/LibPolygonID/releases/download/v0.0.5-rs/witnesscalc.zip",
+                      url: "https://github.com/jrl351/LibPolygonID/releases/download/v0.0.5-rs/rapidsnark.zip",
                       checksum: "e4004df31851a761a7d716da91259739c114f626e0444b0c0ab04aa430052797"),
     ]
 )
