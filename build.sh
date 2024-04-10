@@ -128,7 +128,7 @@ buildWitness() {
 
   cd $XCF_DIR
   xcodebuild -verbose -create-xcframework \
-    -output WitnessCalc.xcframework \
+    -output $WITNESS_TARGET \
     -library $WITNESS_LIBS/witnesscalc-macos.a \
     -library $WITNESS_LIBS/witnesscalc-ios-sim.a \
     -library $WITNESS_LIBS/witnesscalc-ios.a
@@ -225,7 +225,7 @@ buildRapidsnark() {
 
   cd $XCF_DIR
   xcodebuild -verbose -create-xcframework \
-    -output Rapidsnark.xcframework \
+    -output $RS_TARGET \
     -library $RS_LIBS/rapidsnark-macos.a \
     -library $RS_LIBS/rapidsnark-ios-sim.a \
     -library $RS_LIBS/rapidsnark-ios.a
@@ -237,7 +237,7 @@ buildCPolygonID() {
 
   CPOLY_DIR="$XCF_DIR/../c-polygonid"
   CPOLY_LIBS="$XCF_DIR/cpolygon/libs"
-  CPOLY_TARGET="LibPolygonID.xcframework"
+  CPOLY_TARGET="CPolygonID.xcframework"
 
   cd $XCF_DIR
 
@@ -261,7 +261,7 @@ buildCPolygonID() {
   echo "Building xcframework..."
   cd "$XCF_DIR"
   xcodebuild -verbose -create-xcframework \
-    -output LibPolygonID.xcframework \
+    -output $CPOLY_TARGET \
     -library $CPOLY_LIBS/libpolygonid-macos.a \
     -headers ./include/ \
     -library $CPOLY_LIBS/libpolygonid-ios-sim.a \
@@ -271,6 +271,6 @@ buildCPolygonID() {
 }
 
 buildBabyJubjub
-#buildWitness
-#buildRapidsnark
+buildWitness
+buildRapidsnark
 buildCPolygonID

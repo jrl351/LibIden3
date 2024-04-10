@@ -2,7 +2,7 @@ module BabyJubjub {
     header "babyjubjub.h"
     export *
 }
-module LibPolygonID {
+module CPolygonID {
     header "libpolygonid.h"
     export *
 }
