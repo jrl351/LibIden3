@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "babyjubjub",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jrl351/BabyJubjub.git",
+      "state" : {
+        "revision" : "6106165c57bd5fee82ce377f7e0200e350311696",
+        "version" : "0.0.5"
+      }
+    }
+  ],
+  "version" : 2
+}

@@ -13,7 +13,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/jrl351/BabyJubjub.git", from: "0.0.5")
+        .package(url: "https://github.com/jrl351/BabyJubjub.git", from: "0.0.5"),
     ],
     targets: [
         .target(
