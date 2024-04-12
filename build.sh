@@ -6,31 +6,30 @@ XCF_INCLUDE="$XCF_DIR/include"
 set -e
 
 buildWitness() {
- echo "Building witnesscalc..."
+  echo "Building witnesscalc..."
 
- WITNESS_FILES=(
-   witnesscalc_authV2
-   witnesscalc_credentialAtomicQueryMTPV2
-   witnesscalc_credentialAtomicQueryMTPV2OnChain
-   witnesscalc_credentialAtomicQuerySigV2
-   witnesscalc_credentialAtomicQuerySigV2OnChain
-   witnesscalc_credentialAtomicQueryV3
-   witnesscalc_credentialAtomicQueryV3OnChain
- )
+  WITNESS_FILES=(
+    witnesscalc_authV2
+    witnesscalc_credentialAtomicQueryMTPV2
+    witnesscalc_credentialAtomicQueryMTPV2OnChain
+    witnesscalc_credentialAtomicQuerySigV2
+    witnesscalc_credentialAtomicQuerySigV2OnChain
+    witnesscalc_credentialAtomicQueryV3
+    witnesscalc_credentialAtomicQueryV3OnChain
+  )
 
- WITNESS_DIR="$XCF_DIR/../witnesscalc"
- WITNESS_PACKAGE_DIR="$WITNESS_DIR/package"
- WITNESS_IOS_DIR="$WITNESS_DIR/build_witnesscalc_ios"
- WITNESS_IOS_SIM_DIR="$WITNESS_DIR/build_witnesscalc_ios_simulator"
- WITNESS_IOS_OUTPUT_DIR="$WITNESS_IOS_DIR/src/Release-iphoneos"
- WITNESS_IOS_SIM_OUTPUT_DIR="$WITNESS_IOS_SIM_DIR/src/Release-iphonesimulator"
- WITNESS_LIBS="$XCF_DIR/witnesscalc/libs"
- WITNESS_TARGET="WitnessCalc.xcframework"
+  WITNESS_DIR="$XCF_DIR/../witnesscalc"
+  WITNESS_PACKAGE_DIR="$WITNESS_DIR/package"
+  WITNESS_IOS_DIR="$WITNESS_DIR/build_witnesscalc_ios"
+  WITNESS_IOS_SIM_DIR="$WITNESS_DIR/build_witnesscalc_ios_simulator"
+  WITNESS_IOS_OUTPUT_DIR="$WITNESS_IOS_DIR/src/Release-iphoneos"
+  WITNESS_IOS_SIM_OUTPUT_DIR="$WITNESS_IOS_SIM_DIR/src/Release-iphonesimulator"
+  WITNESS_LIBS="$XCF_DIR/witnesscalc/libs"
+  WITNESS_TARGET="WitnessCalc.xcframework"
 
   cd $XCF_DIR
   rm -f $WITNESS_LIBS/*.a
   rm -Rf $WITNESS_TARGET
-
 
   cd $WITNESS_DIR
 
@@ -144,16 +143,38 @@ buildRapidsnark() {
   git submodule init
   git submodule update
 
+  set -x
+
   # MacOS
   ./build_gmp.sh macos_arm64
-  mkdir -p build_prover_macos_arm64 && cd build_prover_macos_arm64
-  cmake .. -DTARGET_PLATFORM=macos_arm64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$RS_MACOS_DIR
+  mkdir -p $RS_DIR/build_prover_macos_arm64
+  cd $RS_DIR/build_prover_macos_arm64
+  cmake $RS_DIR -DTARGET_PLATFORM=macos_arm64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$RS_MACOS_DIR
   make -j4 && make install
 
   mkdir -p $RS_LIBS
   for file in "${RS_FILES[@]}"; do
     cp "$RS_MACOS_DIR/lib/$file.a" "$RS_LIBS/$file-macos.a"
   done
+
+  # iOS
+  cd $RS_DIR
+
+  set +e
+  ./build_gmp.sh ios
+  set -e
+  mkdir -p $RS_IOS_DIR
+  cd $RS_IOS_DIR
+  cmake .. -GXcode -DTARGET_PLATFORM=IOS -DCMAKE_INSTALL_PREFIX=../package_ios
+  xcodebuild -destination 'generic/platform=iOS' \
+    -scheme rapidsnarkStatic \
+    -project rapidsnark.xcodeproj \
+    -configuration Release
+
+  cp "$RS_IOS_OUTPUT_DIR/libfq.a" "$RS_LIBS/libfq-ios.a"
+  cp "$RS_IOS_OUTPUT_DIR/libfr.a" "$RS_LIBS/libfr-ios.a"
+  cp "$RS_IOS_OUTPUT_DIR/librapidsnark.a" "$RS_LIBS/librapidsnark-ios.a"
+  cp $RS_DIR/depends/gmp/package_ios_arm64/lib/libgmp.a $RS_LIBS/libgmp-ios.a
 
   # iOS Simulator
   cd $RS_DIR
@@ -175,26 +196,6 @@ buildRapidsnark() {
   cp "$RS_IOS_SIM_OUTPUT_DIR/librapidsnark.a" "$RS_LIBS/librapidsnark-ios-sim.a"
   cp $RS_DIR/depends/gmp/package_iphone_simulator/lib/libgmp.a $RS_LIBS/libgmp-ios-sim.a
 
-  # iOS
-  cd $RS_DIR
-
-  set +e
-  ./build_gmp.sh ios_simulator
-  set -e
-  mkdir -p $RS_IOS_DIR
-  cd $RS_IOS_DIR
-  cmake .. -GXcode -DTARGET_PLATFORM=IOS -DCMAKE_INSTALL_PREFIX=../package_ios -DUSE_ASM=NO
-  xcodebuild \
-    -destination 'generic/platform=iOS' \
-    -scheme rapidsnarkStatic \
-    -project rapidsnark.xcodeproj \
-    -configuration Release
-
-  cp "$RS_IOS_OUTPUT_DIR/libfq.a" "$RS_LIBS/libfq-ios.a"
-  cp "$RS_IOS_OUTPUT_DIR/libfr.a" "$RS_LIBS/libfr-ios.a"
-  cp "$RS_IOS_OUTPUT_DIR/librapidsnark.a" "$RS_LIBS/librapidsnark-ios.a"
-  cp $RS_DIR/depends/gmp/package_ios_arm64/lib/libgmp.a $RS_LIBS/libgmp-ios.a
-
   echo "Merging rapidsnark libraries..."
   rm -f $RS_LIBS/rapidsnark-*
   libtool -static -no_warning_for_no_symbols \
@@ -215,7 +216,6 @@ buildRapidsnark() {
     -library $RS_LIBS/rapidsnark-macos.a \
     -library $RS_LIBS/rapidsnark-ios-sim.a \
     -library $RS_LIBS/rapidsnark-ios.a
-
 }
 
 buildCPolygonID() {
