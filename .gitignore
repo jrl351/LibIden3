@@ -6,3 +6,4 @@ include/
 babyjubjub/
 witnesscalc/
 rapidsnark/
+.build/
