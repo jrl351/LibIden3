@@ -14,6 +14,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/jrl351/BabyJubjub.git", from: "0.0.5"),
+        .package(url: "https://github.com/iden3/ios-rapidsnark.git", branch: "main")
     ],
     targets: [
         .target(
@@ -22,11 +23,8 @@ let package = Package(
                 "BabyJubjub",
                 "CPolygonID",
                 "WitnessCalc",
-                "Rapidsnark",
+                .product(name: "rapidsnark", package: "ios-rapidsnark"),
             ]),
-        .binaryTarget(name: "Rapidsnark",
-                      url: "https://github.com/jrl351/LibPolygonID/releases/download/v0.0.6/rapidsnark.zip",
-                      checksum: "a314c9220c3da17cdf9eb7123597b6b99f0e95a3496983d71837bdbb1c415f2e"),
         .binaryTarget(name: "WitnessCalc",
                       url: "https://github.com/jrl351/LibPolygonID/releases/download/v0.0.6/witnesscalc.zip",
                       checksum: "3ba680a6aa146ebf679a8a923cbb3a220db1eca5c2930b52c0d41ef0f658f509"),
