@@ -20,10 +20,13 @@ buildWitness() {
 
   WITNESS_DIR="$XCF_DIR/../witnesscalc"
   WITNESS_PACKAGE_DIR="$WITNESS_DIR/package"
+
   WITNESS_IOS_DIR="$WITNESS_DIR/build_witnesscalc_ios"
-  WITNESS_IOS_SIM_DIR="$WITNESS_DIR/build_witnesscalc_ios_simulator"
   WITNESS_IOS_OUTPUT_DIR="$WITNESS_IOS_DIR/src/Release-iphoneos"
+
+  WITNESS_IOS_SIM_DIR="$WITNESS_DIR/build_witnesscalc_ios_simulator"
   WITNESS_IOS_SIM_OUTPUT_DIR="$WITNESS_IOS_SIM_DIR/src/Release-iphonesimulator"
+
   WITNESS_LIBS="$XCF_DIR/witnesscalc/libs"
   WITNESS_TARGET="WitnessCalc.xcframework"
 

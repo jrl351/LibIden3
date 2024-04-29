@@ -6,10 +6,6 @@ module CPolygonID {
     header "libpolygonid.h"
     export *
 }
-module Rapidsnark {
-    header "prover.h"
-    export *
-}
 module WitnessCalc {
     header "witnesscalc_authV2.h"
     header "witnesscalc_credentialAtomicQueryMTPV2.h"
