@@ -15,18 +15,18 @@
 
 - Zip the framework:
 ```
-zip -r libpolygonid.zip LibPolygonID.xcframework
+zip -r cpolygonid.zip CPolygonID.xcframework
 ```
 
 - Get the SHA value for the zip file:
 ```
-openssl dgst -sha256 libpolygonid.zip
+openssl dgst -sha256 cpolygonid.zip
 ```
 
 - Update `Package.swift`.
 
 Change the `.binaryTarget` value.  The `url` will have the version we're about to create after `download`:  
-`url: "https://github.com/jrl351/LibPolygonID/releases/download/v0.0.2/libpolygonid.zip"`
+`url: "https://github.com/jrl351/LibPolygonID/releases/download/v0.0.2/cpolygonid.zip"`
 
 Change the `checksum` value to be the result from the `openssl` command from earlier:  
 `checksum: "83807727c184eb03a38cc0a4c7ed9eb1cb2df96d80885536f99f1eff936f6938"` 
