@@ -27,7 +27,7 @@ let package = Package(
                       url: "https://github.com/jrl351/LibPolygonID/releases/download/v0.0.6/witnesscalc.zip",
                       checksum: "3ba680a6aa146ebf679a8a923cbb3a220db1eca5c2930b52c0d41ef0f658f509"),
         .binaryTarget(name: "CPolygonID",
-                      url: "https://github.com/jrl351/LibPolygonID/releases/download/v0.0.6/cpolygonid.zip",
-                      checksum: "5be71eb696c898962134634d36f8f10a659d5319dcee2c71d1c7767a0d375a46"),
+                      url: "https://github.com/jrl351/LibPolygonID/releases/download/v0.0.7/cpolygonid.zip",
+                      checksum: "22d1bce838d45578eee1ba4457efa8e77f98a36534addfbae45be496deb38e9a"),
     ]
 )
