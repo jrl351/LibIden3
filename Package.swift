@@ -1,10 +1,14 @@
-// swift-tools-version: 5.7
+// swift-tools-version: 5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "LibPolygonID",
+    platforms: [
+        .iOS(.v14),
+        .macOS(.v14),
+    ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
@@ -13,13 +17,13 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/jrl351/BabyJubjub.git", from: "0.0.5"),
+//        .package(url: "https://github.com/jrl351/BabyJubjub.git", from: "0.0.5"),
     ],
     targets: [
         .target(
             name: "LibPolygonID",
             dependencies: [
-                "BabyJubjub",
+//                "BabyJubjub",
                 "CPolygonID",
                 "WitnessCalc",
             ]),
