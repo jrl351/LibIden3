@@ -1,7 +1,3 @@
-module BabyJubjub {
-    header "babyjubjub.h"
-    export *
-}
 module CPolygonID {
     header "libpolygonid.h"
     export *
