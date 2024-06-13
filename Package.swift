@@ -17,19 +17,17 @@ let package = Package(
         ),
     ],
     dependencies: [
-//        .package(url: "https://github.com/jrl351/BabyJubjub.git", from: "0.0.5"),
     ],
     targets: [
         .target(
             name: "LibPolygonID",
             dependencies: [
-//                "BabyJubjub",
                 "CPolygonID",
                 "WitnessCalc",
             ]),
         .binaryTarget(name: "WitnessCalc",
-                      url: "https://github.com/jrl351/LibPolygonID/releases/download/v0.0.6/witnesscalc.zip",
-                      checksum: "3ba680a6aa146ebf679a8a923cbb3a220db1eca5c2930b52c0d41ef0f658f509"),
+                      url: "https://github.com/jrl351/LibPolygonID/releases/download/v0.0.8/witnesscalc.zip",
+                      checksum: "293b5073cf33c83b6cf157776762d8676199a1c5b612c3f303f8b2ffe93ee358"),
         .binaryTarget(name: "CPolygonID", path: "CPolygonID.xcframework"),
     ]
 )
