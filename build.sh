@@ -16,6 +16,7 @@ buildWitness() {
     witnesscalc_credentialAtomicQuerySigV2OnChain
     witnesscalc_credentialAtomicQueryV3
     witnesscalc_credentialAtomicQueryV3OnChain
+    witnesscalc_linkedMultiQuery10
   )
 
   WITNESS_DIR="$XCF_DIR/../witnesscalc"

@@ -10,5 +10,6 @@ module WitnessCalc {
     header "witnesscalc_credentialAtomicQuerySigV2OnChain.h"
     header "witnesscalc_credentialAtomicQueryV3.h"
     header "witnesscalc_credentialAtomicQueryV3OnChain.h"
+    header "witnesscalc_linkedMultiQuery10.h"
     export *
 }
