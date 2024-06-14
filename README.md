@@ -9,7 +9,7 @@
 
 - Run `build.sh`
 
-## To Publish a New Version
+## To Publish a New Version of a framework
 
 - Choose a tag name.  For our purposes, let's assume we're using tag `v0.0.2`
 
@@ -41,6 +41,8 @@ git push --tags
 ```
 
 - Open the [Github page for this repo](https://github.com/jrl351/LibPolygonID).
+
+- Click on "Releases"
 
 - Click "Draft a new release"
 
