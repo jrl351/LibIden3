@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "LibPolygonID",
+    name: "LibIden3",
     platforms: [
         .iOS(.v14),
         .macOS(.v14),
@@ -12,15 +12,15 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "LibPolygonID",
-            targets: [ "LibPolygonID" ]
+            name: "LibIden3",
+            targets: [ "LibIden3" ]
         ),
     ],
     dependencies: [
     ],
     targets: [
         .target(
-            name: "LibPolygonID",
+            name: "LibIden3",
             dependencies: [
                 "CPolygonID",
                 "WitnessCalc",
